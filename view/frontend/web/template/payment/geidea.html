@@ -1,0 +1,50 @@
+<div id="geidea-loader" class="payment-method geidea-payment"
+    data-bind="css: {'_active': (getCode() == isChecked())}, blockLoader: processing">
+    <div class="payment-method-title field choice">
+        <input type="radio" name="payment[method]" class="radio"
+            data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()" />
+        <img class="payment-icon" data-bind="attr: {'src': getCheckoutImage()}" />
+        <label data-bind="attr: {'for': getCode()}" class="label"><span data-bind="text: getTitle()"></span></label>
+    </div>
+
+    <div class="payment-method-content">
+        <p>Mada, VISA, MasterCard, Apple Pay</p>
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+
+        <div>
+            <ul data-bind="foreach: fetchSavedCards()" style="list-style-type: none;">
+                <li>
+                    <input type="radio" data-bind="attr: { value: token }, checked: $parent.selectedTokenId" />
+                    <img data-bind="attr: { src: iconUrl }, alt: 'Image'" />
+                    <span data-bind="text: text"></span>
+                </li>
+            </ul>
+        </div>
+
+
+
+        <!-- ko if: (isVaultEnabled())-->
+        <div class="field choice">
+            <input type="checkbox" class="checkbox" data-bind="checked: saveCard" />
+            <label class="label">
+                <span><!-- ko i18n: 'Save for later use.'--><!-- /ko --></span>
+            </label>
+        </div>
+        <!-- /ko -->
+
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button data-role="review-save" type="submit" data-bind="
+                        attr: {title: $t('Continue')},
+                        enable: (getCode() == isChecked() && !processing()),
+                        click: continueToGeidea,
+                        css: {disabled: !isPlaceOrderActionAllowed()}
+                        " class="action primary checkout" disabled>
+                    <span data-bind="i18n: 'Continue'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
