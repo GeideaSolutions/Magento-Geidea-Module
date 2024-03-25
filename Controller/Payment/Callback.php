@@ -124,8 +124,9 @@ class Callback extends AppAction implements
         $order_id = $order['orderId'];
         $order_status = $order['status'];
         $merchant_reference_id = $order['merchantReferenceId'];
+        $timeStamp = $payload['timeStamp'];
 
-        $result_string = $merchant_key . $amount . $currency . $order_id . $order_status . $merchant_reference_id;
+        $result_string = $merchant_key . $amount . $currency . $order_id . $order_status . $merchant_reference_id . $timeStamp;
 
         $hash = hash_hmac('sha256', $result_string, $api_pass, true);
 

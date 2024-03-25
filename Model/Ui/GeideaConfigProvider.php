@@ -20,7 +20,7 @@ class GeideaConfigProvider implements ConfigProviderInterface
     /**
      * @var Config
      */
-    private $ConfigInterface;
+    private $config;
 
     /**
      * @var SessionManagerInterface

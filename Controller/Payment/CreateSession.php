@@ -72,8 +72,10 @@ class CreateSession extends Action
         $storeId = $this->session->getStoreId();
         $baseMediaUrl = $this->url->getBaseUrl(['_type' => UrlInterface::URL_TYPE_MEDIA]);
         $baseMediaUrl .= 'geidea/';
-        $merchantLogoUrl = '';
+        $merchantLogoUrl = null;
         $relativeMerchantLogoUrl = $this->config->getValue("merchantLogo", $storeId);
+        $timestamp = date("n/d/Y g:i:s A");
+        $signature = $this->generateSignature($this->config->getValue('merchantKey'), number_format(round($quote->getBaseGrandTotal(), 2), 2), $quote->getBaseCurrencyCode(), (string) $quote->getReservedOrderId(), $this->config->getValue('merchantPassword'), $timestamp);
         if ($relativeMerchantLogoUrl != '') {
             $origMerchantLogoUrl = $baseMediaUrl . $relativeMerchantLogoUrl;
             $merchantLogoUrl = str_replace('http://', 'https://', $origMerchantLogoUrl);
@@ -84,7 +86,11 @@ class CreateSession extends Action
             'callbackUrl' =>  $this->url->getBaseUrl() . "/geidea/payment/callback",
             'amount' => number_format(round($quote->getBaseGrandTotal(), 2), 2),
             'currency' => $quote->getBaseCurrencyCode(),
+            'language' => 'en',
+            'timestamp' => $timestamp,
             'merchantReferenceId' =>  (string) $quote->getReservedOrderId(),
+            'paymentIntentId' => null,
+            'paymentOperation' => 'Pay',
             'initiatedBy' => 'Internet',
             "cardOnFile" => ($saveCardFlag == "true") ? true : false,
             "tokenId" => ($tokenId == 'NEW') ? null : $tokenId,
@@ -127,6 +133,7 @@ class CreateSession extends Action
                     'headerColor' => $this->config->getValue("headerColor", $storeId),
                     'hppProfile' => $this->config->getValue('hpp'),
                 ),
+                'uiMode' => 'modal',
             ),
             'order' => array(
                 'integrationType' => 'Plugin',
@@ -137,10 +144,11 @@ class CreateSession extends Action
                 'pluginVersion' => "22",
                 'partnerId' => "222",
             ),
+            'signature' => $signature,
         );
 
         $response = $this->sendGiRequest(
-            'https://api.merchant.geidea.net/payment-intent/api/v1/direct/session',
+            'https://api.merchant.geidea.net/payment-intent/api/v2/direct/session',
             $this->config->getValue('merchantKey'),
             $this->config->getValue('merchantPassword'),
             json_encode($sessionRequestPayload)
@@ -164,6 +172,14 @@ class CreateSession extends Action
         $resultJson = $this->resultJsonFactory->create();
         $resultJson->setData((json_decode($response)));
         return $resultJson;
+    }
+
+    private function generateSignature($merchantPublicKey, $orderAmount, $orderCurrency, $orderMerchantReferenceId, $apiPassword, $timestamp)
+    {
+        $amountStr = number_format($orderAmount, 2, '.', '');
+        $data = "{$merchantPublicKey}{$amountStr}{$orderCurrency}{$orderMerchantReferenceId}{$timestamp}";
+        $hash = hash_hmac('sha256', $data, $apiPassword, true);
+        return base64_encode($hash);
     }
 
     function sendGiRequest($gatewayUrl, $merchantKey, $password, $values, $method = 'POST')

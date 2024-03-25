@@ -26,9 +26,9 @@ abstract class AbstractAction extends AppAction implements
     protected $cartRepository;
 
     /**
-     * @var CartRepositoryInterface
+     * @var GuestCartRepositoryInterface
      */
-    protected $GuestCartRepositoryInterface;
+    protected $guestCartRepository;
 
     /**
      * @var GenericSession

@@ -212,8 +212,7 @@ define([
                         result = savedCardList
                     },
                     error: function (xhr, status, error) {
-                        console.log('Error occurred:', error);
-                        result = error
+                        // console.log('Error occurred:', error);
                     }
                 });
                 return ko.observableArray(result);
