@@ -30,6 +30,7 @@ class CreateSession extends Action
     protected $session;
     private $logger;
     private $countryInformation;
+    private $createSessionUrl;
 
     public function __construct(
         Context $context,
@@ -59,6 +60,20 @@ class CreateSession extends Action
         $this->jsonFactory = $jsonFactory;
         $this->logger = $logger;
         $this->countryInformation = $countryInformation;
+
+        if ($this->config->getValue('env') === 'EGY-PROD') {
+            $this->createSessionUrl = 'https://api.merchant.geidea.net/payment-intent/api/v2/direct/session';
+        } elseif ($this->config->getValue('env') === 'EGY-PREPROD') {
+            $this->createSessionUrl = 'https://api-merchant.staging.geidea.net/payment-intent/api/v2/direct/session';
+        } elseif ($this->config->getValue('env') === 'UAE-PROD') {
+            $this->createSessionUrl = 'https://api.merchant.geidea.ae/payment-intent/api/v2/direct/session';
+        } elseif ($this->config->getValue('env') === 'UAE-PREPROD') {
+            $this->createSessionUrl = 'https://api-merchant.staging.geidea.ae/payment-intent/api/v2/direct/session';
+        } elseif ($this->config->getValue('env') === 'KSA-PROD') {
+            $this->createSessionUrl = 'https://api.ksamerchant.geidea.net/payment-intent/api/v2/direct/session';
+        } elseif ($this->config->getValue('env') === 'KSA-PREPROD') {
+            $this->createSessionUrl = 'https://api-ksamerchant.staging.geidea.net/payment-intent/api/v2/direct/session';
+        }
     }
 
     public function execute()
@@ -148,7 +163,7 @@ class CreateSession extends Action
         );
 
         $response = $this->sendGiRequest(
-            'https://api.merchant.geidea.net/payment-intent/api/v2/direct/session',
+            $this->createSessionUrl,
             $this->config->getValue('merchantKey'),
             $this->config->getValue('merchantPassword'),
             json_encode($sessionRequestPayload)

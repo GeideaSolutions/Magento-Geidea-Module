@@ -1,4 +1,5 @@
 <?php
+
 namespace Geidea\Payment\Gateway\Request;
 
 use Magento\Payment\Gateway\ConfigInterface;
@@ -9,6 +10,7 @@ class VaultSaleUrlBuilder implements BuilderInterface
 {
     public const URL = 'url';
     public const METHOD = 'method';
+    private $payByTokenUrl;
 
     /**
      * @var SubjectReader
@@ -32,6 +34,20 @@ class VaultSaleUrlBuilder implements BuilderInterface
     ) {
         $this->subjectReader = $subjectReader;
         $this->config = $config;
+
+        if ($this->config->getValue('env') === 'EGY-PROD') {
+            $this->payByTokenUrl = 'https://api.merchant.geidea.net/pgw/api/v1/direct/pay/token';
+        } elseif ($this->config->getValue('env') === 'EGY-PREPROD') {
+            $this->payByTokenUrl = 'https://api-merchant.staging.geidea.net/pgw/api/v1/direct/pay/token';
+        } elseif ($this->config->getValue('env') === 'UAE-PROD') {
+            $this->payByTokenUrl = 'https://api.merchant.geidea.ae/pgw/api/v1/direct/pay/token';
+        } elseif ($this->config->getValue('env') === 'UAE-PREPROD') {
+            $this->payByTokenUrl = 'https://api-merchant.staging.geidea.ae/pgw/api/v1/direct/pay/token';
+        } elseif ($this->config->getValue('env') === 'KSA-PROD') {
+            $this->payByTokenUrl = 'https://api.ksamerchant.geidea.net/pgw/api/v1/direct/pay/token';
+        } elseif ($this->config->getValue('env') === 'KSA-PREPROD') {
+            $this->payByTokenUrl = 'https://api-ksamerchant.staging.geidea.net/pgw/api/v1/direct/pay/token';
+        }
     }
 
     /**
@@ -49,7 +65,7 @@ class VaultSaleUrlBuilder implements BuilderInterface
         $storeId = $payment->getOrder()->getStoreId();
 
         $result = [
-            self::URL => $this->config->getValue('payByTokenUrl', $storeId),
+            self::URL => $this->payByTokenUrl,
             self::METHOD => "POST"
         ];
 

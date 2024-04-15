@@ -5,6 +5,7 @@
         <payment>
             <geidea_payment>
                 <active>0</active>
+                <env>EGY-PROD</env>
                 <title>Geidea Online Payments</title>
                 <headerColor></headerColor>
                 <model>GeideaFacade</model>
@@ -19,7 +20,7 @@
                 <callbackUrl>geidea/payment/callback</callbackUrl>
                 <!-- <captureUrl>https://api.merchant.geidea.net/pgw/api/v1/direct/capture</captureUrl>
                 <payByTokenUrl>https://api.merchant.geidea.net/pgw/api/v1/direct/pay/token</payByTokenUrl> -->
-                <refundUrl>https://api.merchant.geidea.net/pgw/api/v1/direct/refund</refundUrl>
+                <!-- <refundUrl>https://api.merchant.geidea.net/pgw/api/v1/direct/refund</refundUrl> -->
                 <merchantKey></merchantKey>
                 <merchantPassword></merchantPassword>
                 <hpp></hpp>

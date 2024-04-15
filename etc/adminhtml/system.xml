@@ -15,7 +15,13 @@
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/geidea_payment/active</config_path>
                     </field>
-                    <field id="vault_active" translate="label" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <field id="env" translate="label comment" type="select" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Environment</label>
+                        <validate>required-entry</validate>
+                        <source_model>Geidea\Payment\Model\ResourceModel\EnvOptions</source_model>
+                        <config_path>payment/geidea_payment/env</config_path>
+                    </field>
+                    <field id="vault_active" translate="label" type="select" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Vault Enabled</label>
                         <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                         <config_path>payment/geidea_payment_vault/active</config_path>

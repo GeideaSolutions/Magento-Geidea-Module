@@ -1,7 +1,7 @@
 === Geidea Online Payments for Magento ===
 
 Contributors: kanti-kiran
-Version: 4.0.0
+Version: 4.1.0
 Tags: credit card, geidea, Apple Pay, payment, payment for magento, payment request, magento, buy now pay later, bnpl
 Requires at least: 2.4.0 or later
 Requires PHP: 8.0.2
@@ -101,3 +101,6 @@ Before running any update make sure to back up your website!
 
 = 4.0.0 - 2024-03-18 =
 * Security update.
+
+= 4.1.0 - 2024-03-26 =
+* Environment configuration
